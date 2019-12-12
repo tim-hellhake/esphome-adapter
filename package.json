@@ -1,0 +1,71 @@
+{
+  "name": "esphome-adapter",
+  "display_name": "ESPHome",
+  "version": "0.1.0",
+  "description": "Connect your ESPHome (https://esphome.io/) devices",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tim-hellhake/esphome-adapter.git"
+  },
+  "author": "Tim Hellhake",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/tim-hellhake/esphome-adapter/issues"
+  },
+  "homepage": "https://github.com/tim-hellhake/esphome-adapter#readme",
+  "files": [
+    "LICENSE",
+    "SHA256SUMS",
+    "manifest.json",
+    "lib/index.js",
+    "lib/esphome-adapter.js"
+  ],
+  "moziot": {
+    "api": {
+      "min": 2,
+      "max": 2
+    },
+    "plugin": true,
+    "exec": "{nodeLoader} {path}",
+    "config": {
+      "pollInterval": 1000
+    },
+    "schema": {
+      "type": "object",
+      "required": [
+        "pollInterval"
+      ],
+      "properties": {
+        "pollInterval": {
+          "type": "integer",
+          "title": "The number of milliseconds between two poll intervals"
+        },
+        "user": {
+          "type": "string",
+          "title": "The user for protected ESPHome devices"
+        },
+        "password": {
+          "type": "string",
+          "title": "The password for protected ESPHome devices"
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "dnssd": "^0.4.1",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.15",
+    "@types/dnssd": "^0.4.1",
+    "@types/node": "^12.12.17",
+    "@types/request": "^2.48.3",
+    "typescript": "^3.7.3"
+  }
+}

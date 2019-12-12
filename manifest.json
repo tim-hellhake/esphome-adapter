@@ -1,0 +1,44 @@
+{
+  "manifest_version": 1,
+  "id": "esphome-adapter",
+  "name": "ESPHome",
+  "short_name": "ESPHome",
+  "version": "0.1.0",
+  "description": "Connect your ESPHome (https://esphome.io/) devices",
+  "homepage_url": "https://github.com/tim-hellhake/esphome-adapter#readme",
+  "license": "MPL-2.0",
+  "author": "Tim Hellhake",
+  "gateway_specific_settings": {
+    "webthings": {
+      "exec": "{nodeLoader} {path}",
+      "strict_min_version": "0.10.0",
+      "strict_max_version": "*",
+      "primary_type": "adapter"
+    }
+  },
+  "options": {
+    "default": {
+      "pollInterval": 1000
+    },
+    "schema": {
+      "type": "object",
+      "required": [
+        "pollInterval"
+      ],
+      "properties": {
+        "pollInterval": {
+          "type": "integer",
+          "title": "The number of milliseconds between two poll intervals"
+        },
+        "user": {
+          "type": "string",
+          "title": "The user for protected ESPHome devices"
+        },
+        "password": {
+          "type": "string",
+          "title": "The password for protected ESPHome devices"
+        }
+      }
+    }
+  }
+}
