@@ -1,7 +1,7 @@
 {
   "name": "esphome-adapter",
   "display_name": "ESPHome",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Connect your ESPHome (https://esphome.io/) devices",
   "main": "lib/index.js",
   "scripts": {
