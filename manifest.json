@@ -18,17 +18,23 @@
   },
   "options": {
     "default": {
-      "pollInterval": 1000
+      "pollInterval": 1000,
+      "fallbackPort": 80
     },
     "schema": {
       "type": "object",
       "required": [
-        "pollInterval"
+        "pollInterval",
+        "fallbackPort"
       ],
       "properties": {
         "pollInterval": {
           "type": "integer",
           "title": "The number of milliseconds between two poll intervals"
+        },
+        "fallbackPort": {
+          "type": "integer",
+          "title": "The fallback port for HTTP which will be used if the device doesn't advertise one (API enabled)"
         },
         "user": {
           "type": "string",

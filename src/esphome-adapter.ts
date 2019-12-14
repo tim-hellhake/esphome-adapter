@@ -104,7 +104,8 @@ class SwitchDevice extends Device {
 }
 
 export class ESPHomeAdapter extends Adapter {
-  private browser?: Browser;
+  private httpBrowser?: Browser;
+  private apiBrowser?: Browser;
   private devices: { [key: string]: SwitchDevice } = {};
 
   constructor(addonManager: any, private manifest: any) {
@@ -120,48 +121,65 @@ export class ESPHomeAdapter extends Adapter {
 
   public startDiscovery() {
     const {
+      fallbackPort
+    } = this.manifest.moziot.config;
+
+    this.httpBrowser = new Browser(tcp('http'));
+    this.apiBrowser = new Browser(tcp('esphomelib'));
+
+    this.httpBrowser.on('serviceUp', async service => {
+      const host = this.removeTrailingDot(service.host);
+      console.log(`Discovered http service at ${host}`);
+      this.handleService(host, service?.addresses[0] || host, service.port);
+    });
+
+    this.apiBrowser.on('serviceUp', async service => {
+      const host = this.removeTrailingDot(service.host);
+      console.log(`Discovered api service at ${host}`);
+      this.handleService(host, service?.addresses[0] || host, fallbackPort || 80);
+    });
+
+    this.httpBrowser.start();
+    this.apiBrowser.start();
+  }
+
+  private async handleService(name: string, host: string, port: number) {
+    const {
       user,
       password
     } = this.manifest.moziot.config;
 
-    this.browser = new Browser(tcp('http'));
+    const url = `${host}:${port}`;
 
-    this.browser.on('serviceUp', async service => {
-      const host = this.removeTrailingDot(service.host);
-      const url = `${service?.addresses[0] || host}:${service.port}`;
-      console.log(`Discovered http service at ${host}`);
+    console.log(`Probing ${url}`);
 
-      console.log(`Probing ${url}`);
-      const result = await fetch(`http://${url}`, user, password);
+    const result = await fetch(`http://${url}`, user, password);
 
-      if (result.statusCode == 200) {
-        const body = result.body;
+    if (result.statusCode == 200) {
+      const body = result.body;
 
-        if (body.indexOf('ESPHome') >= 0) {
-          console.log(`Discovered device at ${host}`);
+      if (body.indexOf('ESPHome') >= 0) {
+        console.log(`Discovered device ${name} at ${host}`);
 
-          let device = this.devices[host];
+        let device = this.devices[name];
 
-          if (!device) {
-            const deviceProperties = parseTable(body);
-            console.log(`Found properties ${JSON.stringify(deviceProperties)}`);
+        if (!device) {
+          const deviceProperties = parseTable(body);
+          console.log(`Found properties ${JSON.stringify(deviceProperties)} of ${name}`);
 
-            for (const deviceProperty of deviceProperties) {
-              if (deviceProperty.domain == 'switch') {
-                const device = new SwitchDevice(this, this.manifest, host, service?.addresses[0] || host, deviceProperty);
-                this.handleDeviceAdded(device);
-              }
+          for (const deviceProperty of deviceProperties) {
+            if (deviceProperty.domain == 'switch') {
+              const device = new SwitchDevice(this, this.manifest, name, host, deviceProperty);
+              this.handleDeviceAdded(device);
             }
           }
-        } else {
-          console.log(`${host} seems to be not an ESPHome device`);
         }
       } else {
-        console.log(`${host} responded with ${result.statusCode}`);
+        console.log(`${name} seems not to be an ESPHome device`);
       }
-    })
-
-    this.browser.start();
+    } else {
+      console.log(`${name} responded with ${result.statusCode}`);
+    }
   }
 
   private removeTrailingDot(str: string) {
@@ -174,9 +192,15 @@ export class ESPHomeAdapter extends Adapter {
 
   public cancelPairing() {
     console.log('Cancel pairing');
-    if (this.browser) {
-      this.browser.stop();
-      this.browser = undefined;
+
+    if (this.httpBrowser) {
+      this.httpBrowser.stop();
+      this.httpBrowser = undefined;
+    }
+
+    if (this.apiBrowser) {
+      this.apiBrowser.stop();
+      this.apiBrowser = undefined;
     }
   }
 }
