@@ -10,6 +10,7 @@ import { Adapter, Device, Property } from 'gateway-addon';
 import { Browser, tcp } from 'dnssd';
 import { load } from 'cheerio';
 import request = require('request');
+import { isIPv4 } from 'net';
 
 interface SwitchResponse {
   id: string,
@@ -130,13 +131,15 @@ export class ESPHomeAdapter extends Adapter {
     this.httpBrowser.on('serviceUp', async service => {
       const host = this.removeTrailingDot(service.host);
       console.log(`Discovered http service at ${host}`);
-      this.handleService(host, service?.addresses[0] || host, service.port);
+      const addresses: string[] = service?.addresses;
+      this.handleService(host, addresses.filter(isIPv4)[0] || host, service.port);
     });
 
     this.apiBrowser.on('serviceUp', async service => {
       const host = this.removeTrailingDot(service.host);
       console.log(`Discovered api service at ${host}`);
-      this.handleService(host, service?.addresses[0] || host, fallbackPort || 80);
+      const addresses: string[] = service?.addresses;
+      this.handleService(host, addresses.filter(isIPv4)[0] || host, fallbackPort || 80);
     });
 
     this.httpBrowser.start();
