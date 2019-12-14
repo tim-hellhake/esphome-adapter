@@ -11,10 +11,10 @@ Connect your [ESPHome](https://esphome.io/) devices.
 ## Configuration (if you enabled authentication)
 1. Go to the addon config
 2. Enter the same user/password as in the ESPHome config
+3. If the ESPHome `api` is enabled enter the port of the `web_server` as `fallbackPort` in the config
 
 ## Prerequisites
-1. The native api needs to be disabled (no `api`)
-2. The web server needs to be enabled (`web_server`)
+1. The web server needs to be enabled (`web_server`)
 
 ## Limitations
 * Currently only switches are supported.
