@@ -22,8 +22,12 @@
     "LICENSE",
     "SHA256SUMS",
     "manifest.json",
+    "lib/binary-sensor-device.js",
+    "lib/discovery.js",
+    "lib/esphome-adapter.js",
+    "lib/fetch.js",
     "lib/index.js",
-    "lib/esphome-adapter.js"
+    "lib/switch-device.js"
   ],
   "moziot": {
     "api": {
