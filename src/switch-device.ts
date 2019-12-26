@@ -17,8 +17,6 @@ interface SwitchResponse {
 }
 
 class SwitchProperty extends Property {
-    private lastState?: boolean;
-
     constructor(private device: Device, private manifest: any, private host: string, private id: String) {
         super(device, 'on', {
             '@type': 'OnOffProperty',
@@ -70,12 +68,7 @@ class SwitchProperty extends Property {
     }
 
     update(value: boolean) {
-        if (this.lastState != value) {
-            this.lastState = value;
-            this.setCachedValue(value);
-            this.device.notifyPropertyChanged(this);
-            console.log(`Value of ${this.device.name}#${this.title} changed to ${value}`);
-        }
+        this.setCachedValueAndNotify(value);
     }
 }
 
