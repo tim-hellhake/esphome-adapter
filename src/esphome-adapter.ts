@@ -20,7 +20,7 @@ export class ESPHomeAdapter extends Adapter {
   private devices: { [key: string]: SwitchDevice } = {};
 
   constructor(addonManager: any, private manifest: any) {
-    super(addonManager, manifest.display_name, manifest.id);
+    super(addonManager, manifest.display_name, manifest.name);
     addonManager.addAdapter(this);
     this.startDiscovery();
   }
