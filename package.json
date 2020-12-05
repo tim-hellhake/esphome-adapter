@@ -29,43 +29,6 @@
     "lib/index.js",
     "lib/switch-device.js"
   ],
-  "moziot": {
-    "api": {
-      "min": 2,
-      "max": 2
-    },
-    "plugin": true,
-    "exec": "{nodeLoader} {path}",
-    "config": {
-      "pollInterval": 1000,
-      "fallbackPort": 80
-    },
-    "schema": {
-      "type": "object",
-      "required": [
-        "pollInterval",
-        "fallbackPort"
-      ],
-      "properties": {
-        "pollInterval": {
-          "type": "integer",
-          "title": "The number of milliseconds between two poll intervals"
-        },
-        "fallbackPort": {
-          "type": "integer",
-          "title": "The fallback port for HTTP which will be used if the device doesn't advertise one (API enabled)"
-        },
-        "user": {
-          "type": "string",
-          "title": "The user for protected ESPHome devices"
-        },
-        "password": {
-          "type": "string",
-          "title": "The password for protected ESPHome devices"
-        }
-      }
-    }
-  },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "dnssd": "^0.4.1",
