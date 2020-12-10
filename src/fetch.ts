@@ -9,15 +9,23 @@
 import request = require('request');
 
 export function fetch(uri: string, user: string, pass: string, method: string = 'GET'): Promise<request.Response> {
-    return new Promise((resolve, reject) => {
-        request({
-            method,
-            uri,
+    let additionalProperties: Record<string, unknown> = {}
+
+    if (user && pass) {
+        additionalProperties = {
             auth: {
                 user,
                 pass,
                 sendImmediately: false
             }
+        }
+    }
+
+    return new Promise((resolve, reject) => {
+        request({
+            method,
+            uri,
+            ...additionalProperties
         }, function (error, response) {
             if (error) {
                 reject(error);
