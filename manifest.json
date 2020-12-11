@@ -3,7 +3,7 @@
   "id": "esphome-adapter",
   "name": "ESPHome",
   "short_name": "ESPHome",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Connect your ESPHome (https://esphome.io/) devices",
   "homepage_url": "https://github.com/tim-hellhake/esphome-adapter#readme",
   "license": "MPL-2.0",
